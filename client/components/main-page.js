@@ -1,19 +1,17 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {setOcrText} from '../store'
+import {YoutubePlayer} from './index';
 
 const MainPage = props => {
   const {videoId, ocrText} = props;
   const onClick = () => {
     props.setOcrText('Lorem Ipsum');
   }
+
   return (
     <div>
-      <iframe
-        width="1280"
-        height="720"
-        src={`https://www.youtube.com/embed/${videoId}`}
-      />
+      <YoutubePlayer videoId={videoId}/>
       <textarea value={ocrText} />
       <button type="button" onClick={onClick}>Lorem Ipsum</button>
     </div>
