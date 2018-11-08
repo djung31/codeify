@@ -1,19 +1,30 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {setOcrText} from '../store'
 
 const MainPage = props => {
-  const videoId = props.videoId;
+  const {videoId, ocrText} = props;
+  const onClick = () => {
+    props.setOcrText('Lorem Ipsum');
+  }
   return (
-    <iframe
-      width="420"
-      height="315"
-      src={`https://www.youtube.com/embed/${videoId}`}
-    />
+    <div>
+      <iframe
+        width="1280"
+        height="720"
+        src={`https://www.youtube.com/embed/${videoId}`}
+      />
+      <textarea value={ocrText} />
+      <button type="button" onClick={onClick}>Lorem Ipsum</button>
+    </div>
   )
 }
 
 const mapState = state => ({
-  videoId: state.youtube.videoId
+  videoId: state.youtube.videoId,
+  ocrText: state.ocrText
 })
-
-export default connect(mapState)(MainPage);
+const mapDispatch = dispatch => ({
+  setOcrText: (text) => dispatch(setOcrText(text))
+})
+export default connect(mapState, mapDispatch)(MainPage)

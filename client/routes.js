@@ -21,8 +21,8 @@ class Routes extends Component {
         {/* Routes placed here are available to all visitors */}
         <Route exact path="/" component={LandingPage} />
         <Route path="/app" component={MainPage} />
-        <Route path="/login" component={Login} />
-        <Route path="/signup" component={Signup} />
+        {/* <Route path="/login" component={Login} /> */}
+        {/* <Route path="/signup" component={Signup} /> */}
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}
@@ -30,7 +30,7 @@ class Routes extends Component {
           </Switch>
         )}
         {/* Displays our Login component as a fallback */}
-        <Route component={Login} />
+        <Route component={LandingPage} />
       </Switch>
     )
   }
