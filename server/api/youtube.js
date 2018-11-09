@@ -1,9 +1,9 @@
 const router = require('express').Router()
 const puppeteer = require('puppeteer')
-const axios = require('axios');
+const axios = require('axios')
 // const {User} = require('../db/models')
 module.exports = router
-
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY
 router.get('/', async (req, res, next) => {
   // check query params for validity
   if (req.query.videoId === undefined || req.query.t === undefined) {
@@ -13,7 +13,6 @@ router.get('/', async (req, res, next) => {
   const videoId = req.query.videoId
   const t = req.query.t
   const urlToScreenshot = `https://www.youtube.com/watch?v=${videoId}&t=${t}`
-
 
   try {
     // use puppeteer to generate a screenshot of the youtube vid
@@ -35,20 +34,38 @@ router.get('/', async (req, res, next) => {
     const imageStr = await video.screenshot({
       encoding: 'base64'
     })
-    console.log('image generated...');
-
+    console.log('image generated...')
+    // console.log('image is a...', typeof imageStr)
+    // res.sendStatus(200);
+    // res.json({
+    //   "image": imageStr
+    // })
     // send the string to google cloud api
-
-
-
-
-
-    res.send(imageStr)
+    // json req body
+    const requestBody = {
+      "requests":[{
+         "image": {
+            "content":imageStr
+         },
+         "features": [{
+            "type": "DOCUMENT_TEXT_DETECTION",
+            "maxResults": 100,
+         }]
+      }]
+   }
+    console.log('sending data to google...')
+    const response = await axios.post(
+      `https://vision.googleapis.com/v1/images:annotate?key=${GOOGLE_API_KEY}`,
+      requestBody
+    )
+    console.log('google request successful!')
+    console.log(response.data);
+    res.json(response.data);
 
     await browser.close()
   } catch (err) {
-    console.log(err)
-    next(err);
+    console.log(err.response)
+    // next(err)
   }
   // console.log('api= ', process.env.GOOGLE_API_KEY)
   // res.sendStatus(200)
