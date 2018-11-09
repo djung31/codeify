@@ -14,6 +14,7 @@ class MainPage extends Component {
     super()
     this.canvasRef = React.createRef()
     this.state = {
+      isCropping: false,
       currentPlayerState: NaN,
       // rectangle for canvas
       selected: false,
@@ -34,6 +35,11 @@ class MainPage extends Component {
   }
 
   // controls drawing rectangle
+  toggleCrop = () => {
+    const curVal = this.state.isCropping
+    this.setState({isCropping: !curVal})
+  }
+
   onSelected = rect => {
     this.setState({selected: true, ...rect})
   }
@@ -59,39 +65,46 @@ class MainPage extends Component {
         autoplay: 1
       }
     }
-    const isPaused = this.state.currentPlayerState === 2 // true if video paused
-
+    const isPaused = (this.state.currentPlayerState === 2) // true if video paused
+    const isCropping = this.state.isCropping
     // overlay video and canvas elememnts
 
     return (
-      <div>
-        <div className="container">
-          <YouTube
-            videoId={`${videoId}?wmode=Opaque`}
-            opts={opts}
-            onReady={this._onReady}
-            onStateChange={this._onPlayerStateChange}
-            containerClassName="youtube"
-          />
-          <Rector
-            width={WIDTH}
-            height={HEIGHT}
-            onSelected={this.onSelected}
-          />
+      <div className="columns">
+        <div className="column">
+          <div className="youtube-container">
+            <YouTube
+              videoId={`${videoId}?wmode=Opaque`}
+              opts={opts}
+              onReady={this._onReady}
+              onStateChange={this._onPlayerStateChange}
+              containerClassName="youtube-video"
+            />
+            {(isPaused && isCropping) && (
+              <Rector
+                width={WIDTH}
+                height={HEIGHT}
+                onSelected={this.onSelected}
+              />
+            )}
+          </div>
         </div>
-        <div>
-          <h1>hello world</h1>
-        </div>
-        <div>
+        <div className=" column">
           <h1>Current timestamp: {currentTime}</h1>
           <p>
             <textarea value={ocrText} />
           </p>
           {isPaused && (
-            <button type="button" onClick={this.onClick}>
-              Generate OCR text
-            </button>
+            <React.Fragment>
+              <button type="button" onClick={this.onClick}>
+                Generate OCR text
+              </button>
+              <button type="button" onClick={this.toggleCrop}>
+                Toggle Cropping {isCropping ? 'Off': 'On'}
+              </button>
+            </React.Fragment>
           )}
+
           {image && <img src={`data:image/jpeg;base64,${image}`} />}
         </div>
       </div>

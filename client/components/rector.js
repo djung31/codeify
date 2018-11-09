@@ -101,7 +101,7 @@ class Rector extends React.Component {
         ref={c => {
           this.canvas = c
         }}
-        className="overlay"
+        className="youtube-overlay"
       />
     )
   }
