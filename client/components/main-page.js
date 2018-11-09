@@ -1,13 +1,26 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {clearOcrState, resetYoutube, setCurrentTime, generateOcrData} from '../store'
+import {
+  clearOcrState,
+  resetYoutube,
+  setCurrentTime,
+  generateOcrData
+} from '../store'
 import YouTube from 'react-youtube'
+import {Rector} from './index'
 
 class MainPage extends Component {
   constructor() {
     super()
+    this.canvasRef = React.createRef();
     this.state = {
-      currentPlayerState: NaN
+      currentPlayerState: NaN,
+      // rectangle for canvas
+      selected: false,
+      x: -1,
+      y: -1,
+      w: -1,
+      h: -1
     }
   }
   componentWillUnmount() {
@@ -20,34 +33,56 @@ class MainPage extends Component {
     this.props.generateOcrData(videoId, currentTime)
   }
 
+  // controls drawing rectangle
+  onSelected = (rect) => {
+    this.setState({ selected: true, ...rect})
+  }
+
+  getSelectionStr() {
+    if (this.state.selected) {
+      const state = this.state
+      return `x: ${state.x}, y: ${state.y}, w: ${state.w}, h: ${state.h}`
+    }
+    return 'No Selection';
+  }
+
   render() {
+    const HEIGHT = 360
+    const WIDTH = 640
     const {videoId, ocrData, currentTime} = this.props
-    const {ocrText, image, visionData} = ocrData;
+    const {ocrText, image, visionData} = ocrData
     const opts = {
-      height: '360',
-      width: '640',
+      height: HEIGHT,
+      width: WIDTH,
       playerVars: {
         // https://developers.google.com/youtube/player_parameters
         autoplay: 1
       }
     }
-    const isPaused = (this.state.currentPlayerState === 2);
+    const isPaused = this.state.currentPlayerState === 2 // true if video paused
 
     return (
       <div>
-        <YouTube
-          videoId={videoId}
-          opts={opts}
-          onReady={this._onReady}
-          onStateChange={this._onPlayerStateChange}
-        />
+        <div>
+          <Rector width={WIDTH} height={HEIGHT} onSelected={this.onSelected} />
+          <YouTube
+            videoId={videoId}
+            opts={opts}
+            onReady={this._onReady}
+            onStateChange={this._onPlayerStateChange}
+          />
+        </div>
         <div>
           <h1>Current timestamp: {currentTime}</h1>
-          <p><textarea value={ocrData.ocrText} /></p>
-          {isPaused && (<button type="button" onClick={this.onClick}>
-            Generate OCR text
-          </button>)}
-          {(image) && <img src={`data:image/jpeg;base64,${image}`} />}
+          <p>
+            <textarea value={ocrText} />
+          </p>
+          {isPaused && (
+            <button type="button" onClick={this.onClick}>
+              Generate OCR text
+            </button>
+          )}
+          {image && <img src={`data:image/jpeg;base64,${image}`} />}
         </div>
       </div>
     )
