@@ -1,31 +1,25 @@
 const router = require('express').Router()
 const puppeteer = require('puppeteer')
 const axios = require('axios')
+const Jimp = require('jimp')
 // const fs = require('fs')
 
 // const {User} = require('../db/models')
 module.exports = router
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY
-router.get('/', async (req, res, next) => {
-  // check query params for validity
-  if (req.query.videoId === undefined || req.query.t === undefined) {
-    res.send('Invalid videoId: ' + req.query.videoId + '&t=' + req.query.t)
-    return
-  }
-  const videoId = req.query.videoId
-  const t = req.query.t
-  const urlToScreenshot = `https://www.youtube.com/watch?v=${videoId}&t=${t}s`
 
+// util
+
+const generateScreenshot = async (url, x, y, w, h) => {
+  console.log('screenshotting: ', url)
   try {
-    // use puppeteer to generate a screenshot of the youtube vid
-    console.log('screenshotting: ', urlToScreenshot)
     const browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
       // headless: false
     })
     const page = await browser.newPage()
-    await page.goto(urlToScreenshot)
-    console.log('webpage: ', urlToScreenshot)
+    await page.goto(url)
+    console.log('webpage: ', url)
     await page.setViewport({width: 1920, height: 1080})
     const video = await page.$('.html5-video-player')
     await page.evaluate(() => {
@@ -33,27 +27,58 @@ router.get('/', async (req, res, next) => {
       let dom = document.querySelector('.ytp-chrome-bottom')
       dom.style.display = 'none'
     })
-    let bufferImage;
-    // instead of saving an image we'll get a base64 string
-    const imageStr = await video.screenshot().then( (buffer) => {
-      bufferImage = buffer.toString('base64');
-    });
+    // instead of saving an image we'll get .. something
+    const imageStr = await video
+      .screenshot({
+        clip: {x: +x, y: +y, width: +w, height: +h} //must be numbers!!!!
+      })
+      .then(buffer => buffer.toString('base64'))
+    await browser.close()
+    return imageStr
+  } catch (err) {
+    console.error(err.response)
+  }
+}
 
+router.get('/', async (req, res, next) => {
+  // check query params for validity
+  if (req.query.videoId === undefined || req.query.t === undefined) {
+    res.send('Invalid videoId: ' + req.query.videoId + '&t=' + req.query.t)
+    return
+  }
+  // URL PARAMS
+  const videoId = req.query.videoId
+  const t = req.query.t
+  const x = req.query.x
+  const y = req.query.y
+  const w = req.query.w
+  const h = req.query.h
+
+  const urlToScreenshot = `https://www.youtube.com/watch?v=${videoId}&t=${t}s`
+  try {
+    // use puppeteer to generate a screenshot of the youtube vid
+    const imageStr = await generateScreenshot(urlToScreenshot, x, y, w, h)
+    // console.log(imageStr);
+    // res.sendStatus(200);
     console.log('image generated...')
-
+    // return
     // send the string to google cloud api
     // json req body
     const requestBody = {
-      "requests":[{
-         "image": {
-            "content":bufferImage
-         },
-         "features": [{
-            "type": "DOCUMENT_TEXT_DETECTION",
-            "maxResults": 100,
-         }]
-      }]
-   }
+      requests: [
+        {
+          image: {
+            content: imageStr
+          },
+          features: [
+            {
+              type: 'DOCUMENT_TEXT_DETECTION',
+              maxResults: 100
+            }
+          ]
+        }
+      ]
+    }
     console.log('sending data to google...')
     const response = await axios.post(
       `https://vision.googleapis.com/v1/images:annotate?key=${GOOGLE_API_KEY}`,
@@ -62,10 +87,9 @@ router.get('/', async (req, res, next) => {
     console.log('google request successful!')
     // send data to client
     res.json({
-      image: bufferImage,
+      image: imageStr,
       data: response.data
-    });
-    await browser.close()
+    })
   } catch (err) {
     console.log(err.response)
     // next(err)
