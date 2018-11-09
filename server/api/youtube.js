@@ -20,7 +20,8 @@ router.get('/', async (req, res, next) => {
     // use puppeteer to generate a screenshot of the youtube vid
     console.log('screenshotting: ', urlToScreenshot)
     const browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      // headless: false
     })
     const page = await browser.newPage()
     await page.goto(urlToScreenshot + '&t=' + req.query.t)
