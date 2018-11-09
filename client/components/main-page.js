@@ -29,7 +29,7 @@ class MainPage extends Component {
     this.props.clearOcrState()
   }
 
-  onClick = () => {
+  onGenerateBtnClick = () => {
     const {videoId, currentTime} = this.props
     this.props.generateOcrData(videoId, currentTime)
   }
@@ -96,15 +96,17 @@ class MainPage extends Component {
           </p>
           {isPaused && (
             <React.Fragment>
-              <button type="button" onClick={this.onClick}>
+              <button type="button" onClick={this.onGenerateBtnClick}>
                 Generate OCR text
               </button>
               <button type="button" onClick={this.toggleCrop}>
-                Toggle Cropping {isCropping ? 'Off': 'On'}
+                Turn Cropping {isCropping ? 'Off': 'On'}
               </button>
             </React.Fragment>
           )}
-
+          <p>
+            x: {this.state.x}, y: {this.state.y}, w: {this.state.w}, h: {this.state.h},
+          </p>
           {image && <img src={`data:image/jpeg;base64,${image}`} />}
         </div>
       </div>
