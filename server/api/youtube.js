@@ -1,6 +1,8 @@
 const router = require('express').Router()
 const puppeteer = require('puppeteer')
 const axios = require('axios')
+// const fs = require('fs')
+
 // const {User} = require('../db/models')
 module.exports = router
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY
@@ -35,11 +37,7 @@ router.get('/', async (req, res, next) => {
       encoding: 'base64'
     })
     console.log('image generated...')
-    // console.log('image is a...', typeof imageStr)
-    // res.sendStatus(200);
-    // res.json({
-    //   "image": imageStr
-    // })
+
     // send the string to google cloud api
     // json req body
     const requestBody = {
@@ -59,9 +57,11 @@ router.get('/', async (req, res, next) => {
       requestBody
     )
     console.log('google request successful!')
-    console.log(response.data);
-    res.json(response.data);
-
+    // send data to client
+    res.json({
+      image: imageStr,
+      data: response.data
+    });
     await browser.close()
   } catch (err) {
     console.log(err.response)

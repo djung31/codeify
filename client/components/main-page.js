@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {setOcrText, clearOcrText, resetYoutube, setCurrentTime, generateOcrText} from '../store'
+import {clearOcrState, resetYoutube, setCurrentTime, generateOcrData} from '../store'
 import YouTube from 'react-youtube'
 
 class MainPage extends Component {
@@ -12,16 +12,17 @@ class MainPage extends Component {
   }
   componentWillUnmount() {
     this.props.resetYoutube()
-    this.props.clearOcrText()
+    this.props.clearOcrState()
   }
 
   onClick = () => {
     const {videoId, currentTime} = this.props
-    this.props.generateOcrText(videoId, currentTime)
+    this.props.generateOcrData(videoId, currentTime)
   }
 
   render() {
-    const {videoId, ocrText, currentTime} = this.props
+    const {videoId, ocrData, currentTime} = this.props
+    const {ocrText, image, visionData} = ocrData;
     const opts = {
       height: '360',
       width: '640',
@@ -42,10 +43,11 @@ class MainPage extends Component {
         />
         <div>
           <h1>Current timestamp: {currentTime}</h1>
-          <p><textarea value={ocrText} /></p>
+          <p><textarea value={ocrData.ocrText} /></p>
           {isPaused && (<button type="button" onClick={this.onClick}>
             Generate OCR text
           </button>)}
+          {(image) && <img src={`data:image/jpeg;base64,${image}`} />}
         </div>
       </div>
     )
@@ -71,13 +73,13 @@ class MainPage extends Component {
 const mapState = state => ({
   videoId: state.youtube.videoId,
   currentTime: state.youtube.currentTime,
-  ocrText: state.ocrText
+  ocrData: state.ocrData,
+  image: state.ocrData.image
 })
 const mapDispatch = dispatch => ({
-  setOcrText: text => dispatch(setOcrText(text)),
   setCurrentTime: time => dispatch(setCurrentTime(time)),
   resetYoutube: () => dispatch(resetYoutube()),
-  clearOcrText: () => dispatch(clearOcrText()),
-  generateOcrText: (videoId, time) => dispatch(generateOcrText(videoId, time))
+  clearOcrState: () => dispatch(clearOcrState()),
+  generateOcrData: (videoId, time) => dispatch(generateOcrData(videoId, time))
 })
 export default connect(mapState, mapDispatch)(MainPage)
