@@ -37,6 +37,7 @@ export const generateOcrData = (videoId, time) => async dispatch => {
   const visionData = data.data;
   dispatch(setImageData(image));
   dispatch(setVisionData(visionData));
+  dispatch(setOcrText(visionData.responses[0].fullTextAnnotation.text))
 }
 
 //handler
