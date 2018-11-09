@@ -12,7 +12,7 @@ import {Rector} from './index'
 class MainPage extends Component {
   constructor() {
     super()
-    this.canvasRef = React.createRef();
+    this.canvasRef = React.createRef()
     this.state = {
       currentPlayerState: NaN,
       // rectangle for canvas
@@ -34,8 +34,8 @@ class MainPage extends Component {
   }
 
   // controls drawing rectangle
-  onSelected = (rect) => {
-    this.setState({ selected: true, ...rect})
+  onSelected = rect => {
+    this.setState({selected: true, ...rect})
   }
 
   getSelectionStr() {
@@ -43,7 +43,7 @@ class MainPage extends Component {
       const state = this.state
       return `x: ${state.x}, y: ${state.y}, w: ${state.w}, h: ${state.h}`
     }
-    return 'No Selection';
+    return 'No Selection'
   }
 
   render() {
@@ -59,34 +59,28 @@ class MainPage extends Component {
         autoplay: 1
       }
     }
-    const isPaused = (this.state.currentPlayerState === 2) // true if video paused
+    const isPaused = this.state.currentPlayerState === 2 // true if video paused
 
     // overlay video and canvas elememnts
-    const containerStyle = { position: 'relative'};
-    const canvasStyle = {
-      position: 'absolute',
-      top: '0px',
-      left: '0px',
-      "z-index": 2
-    }
-    const videoStyle = {
-      position: 'absolute',
-      top: '0px',
-      left: '0px',
-      "z-index": 1
-    }
 
     return (
       <div>
-        <div style={containerStyle}>
-          <Rector width={WIDTH} height={HEIGHT} onSelected={this.onSelected} style={canvasStyle}/>
+        <div className="container">
           <YouTube
-            videoId={videoId}
+            videoId={`${videoId}?wmode=Opaque`}
             opts={opts}
             onReady={this._onReady}
             onStateChange={this._onPlayerStateChange}
-            style={videoStyle}
+            containerClassName="youtube"
           />
+          <Rector
+            width={WIDTH}
+            height={HEIGHT}
+            onSelected={this.onSelected}
+          />
+        </div>
+        <div>
+          <h1>hello world</h1>
         </div>
         <div>
           <h1>Current timestamp: {currentTime}</h1>
