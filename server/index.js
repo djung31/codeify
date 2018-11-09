@@ -16,7 +16,7 @@ module.exports = app
 // Otherwise, Mocha v4+ never quits after tests.
 // if (process.env.NODE_ENV === 'test') {
 //   after('close the session store', () => sessionStore.stopExpiringSessions())
-}
+// }
 
 /**
  * In your development environment, you can keep all of your
