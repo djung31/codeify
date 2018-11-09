@@ -21,7 +21,7 @@ router.get('/', async (req, res, next) => {
     console.log('screenshotting: ', urlToScreenshot)
     const browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      headless: false
+      // headless: false
     })
     const page = await browser.newPage()
     await page.goto(urlToScreenshot + '&t=' + req.query.t)
