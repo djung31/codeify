@@ -59,17 +59,33 @@ class MainPage extends Component {
         autoplay: 1
       }
     }
-    const isPaused = this.state.currentPlayerState === 2 // true if video paused
+    const isPaused = (this.state.currentPlayerState === 2) // true if video paused
+
+    // overlay video and canvas elememnts
+    const containerStyle = { position: 'relative'};
+    const canvasStyle = {
+      position: 'absolute',
+      top: '0px',
+      left: '0px',
+      "z-index": 2
+    }
+    const videoStyle = {
+      position: 'absolute',
+      top: '0px',
+      left: '0px',
+      "z-index": 1
+    }
 
     return (
       <div>
-        <div>
-          <Rector width={WIDTH} height={HEIGHT} onSelected={this.onSelected} />
+        <div style={containerStyle}>
+          <Rector width={WIDTH} height={HEIGHT} onSelected={this.onSelected} style={canvasStyle}/>
           <YouTube
             videoId={videoId}
             opts={opts}
             onReady={this._onReady}
             onStateChange={this._onPlayerStateChange}
+            style={videoStyle}
           />
         </div>
         <div>
