@@ -31,7 +31,9 @@ class MainPage extends Component {
 
   onGenerateBtnClick = () => {
     const {videoId, currentTime} = this.props
-    this.props.generateOcrData(videoId, currentTime)
+    const {x, y, w, h} = this.state;
+    const cropArray = [x,y,w,h]
+    this.props.generateOcrData(videoId, currentTime, cropArray)
   }
 
   // controls drawing rectangle
