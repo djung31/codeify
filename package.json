@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "get useable text from a youtube video",
   "engines": {
-    "node": ">= 7.0.0"
+    "node": "9.8.0"
   },
   "main": "index.js",
   "scripts": {
