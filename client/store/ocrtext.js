@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 const initialState = '';
 
 // action types
@@ -12,6 +14,13 @@ export const setOcrText = (text) => ({
 const clearOcrText = () => ({
   type: CLEAR_OCR_TEXT
 })
+
+// thunk
+export const generateOcrText = (videoId, time) => async dispatch => {
+  const {data} = await axios.get(`/api/youtube?videoId=${videoId}&t=${time}`)
+  const action = setOcrText(data);
+  dispatch(action);
+}
 
 //handler
 const handler = {

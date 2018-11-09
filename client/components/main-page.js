@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {setOcrText, clearOcrText, resetYoutube, setCurrentTime} from '../store'
+import {setOcrText, clearOcrText, resetYoutube, setCurrentTime, generateOcrText} from '../store'
 import YouTube from 'react-youtube'
 
 class MainPage extends Component {
@@ -16,7 +16,8 @@ class MainPage extends Component {
   }
 
   onClick = () => {
-    this.props.setOcrText('Lorem Ipsum')
+    const {videoId, currentTime} = this.props
+    this.props.generateOcrText(videoId, currentTime)
   }
 
   render() {
@@ -43,7 +44,7 @@ class MainPage extends Component {
           <h1>Current timestamp: {currentTime}</h1>
           <p><textarea value={ocrText} /></p>
           {isPaused && (<button type="button" onClick={this.onClick}>
-            Lorem Ipsum
+            Generate OCR text
           </button>)}
         </div>
       </div>
@@ -76,6 +77,7 @@ const mapDispatch = dispatch => ({
   setOcrText: text => dispatch(setOcrText(text)),
   setCurrentTime: time => dispatch(setCurrentTime(time)),
   resetYoutube: () => dispatch(resetYoutube()),
-  clearOcrText: () => dispatch(clearOcrText())
+  clearOcrText: () => dispatch(clearOcrText()),
+  generateOcrText: (videoId, time) => dispatch(generateOcrText(videoId, time))
 })
 export default connect(mapState, mapDispatch)(MainPage)
