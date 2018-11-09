@@ -14,7 +14,7 @@ router.get('/', async (req, res, next) => {
   }
   const videoId = req.query.videoId
   const t = req.query.t
-  const urlToScreenshot = `https://www.youtube.com/watch?v=${videoId}&t=${t}`
+  const urlToScreenshot = `https://www.youtube.com/watch?v=${videoId}&t=${t}s`
 
   try {
     // use puppeteer to generate a screenshot of the youtube vid
@@ -24,7 +24,8 @@ router.get('/', async (req, res, next) => {
       // headless: false
     })
     const page = await browser.newPage()
-    await page.goto(urlToScreenshot + '&t=' + req.query.t)
+    await page.goto(urlToScreenshot)
+    console.log('webpage: ', urlToScreenshot)
     await page.setViewport({width: 1920, height: 1080})
     const video = await page.$('.html5-video-player')
     await page.evaluate(() => {
@@ -32,11 +33,12 @@ router.get('/', async (req, res, next) => {
       let dom = document.querySelector('.ytp-chrome-bottom')
       dom.style.display = 'none'
     })
-
+    let bufferImage;
     // instead of saving an image we'll get a base64 string
-    const imageStr = await video.screenshot({
-      encoding: 'base64'
-    })
+    const imageStr = await video.screenshot().then( (buffer) => {
+      bufferImage = buffer.toString('base64');
+    });
+
     console.log('image generated...')
 
     // send the string to google cloud api
@@ -44,7 +46,7 @@ router.get('/', async (req, res, next) => {
     const requestBody = {
       "requests":[{
          "image": {
-            "content":imageStr
+            "content":bufferImage
          },
          "features": [{
             "type": "DOCUMENT_TEXT_DETECTION",
@@ -60,7 +62,7 @@ router.get('/', async (req, res, next) => {
     console.log('google request successful!')
     // send data to client
     res.json({
-      image: imageStr,
+      image: bufferImage,
       data: response.data
     });
     await browser.close()
