@@ -20,3 +20,7 @@
   display: block;
   position: absolute
 }
+
+.main-page-controls {
+  z-index: 3
+}

@@ -67,30 +67,37 @@ class Rector extends React.Component {
   }
 
   onMouseDown = e => {
-    this.isDrag = true
-    this.curX = this.startX = e.offsetX
-    this.curY = this.startY = e.offsetY
-    requestAnimationFrame(this.updateCanvas)
+    // console.log(event.target)
+    if (e.target.tagName === 'CANVAS') {
+      this.isDrag = true
+      this.curX = this.startX = e.offsetX
+      this.curY = this.startY = e.offsetY
+      requestAnimationFrame(this.updateCanvas)
+    }
   }
 
   onMouseMove = e => {
-    if (!this.isDrag) return
-    this.curX = e.offsetX
-    this.curY = e.offsetY
-    this.isDirty = true
+    if (e.target.tagName === 'CANVAS') {
+      if (!this.isDrag) return
+      this.curX = e.offsetX
+      this.curY = e.offsetY
+      this.isDirty = true
+    }
   }
 
   onMouseUp = e => {
-    this.isDrag = false
-    this.isDirty = true
+    if (e.target.tagName === 'CANVAS') {
+      this.isDrag = false
+      this.isDirty = true
 
-    const rect = {
-      x: Math.min(this.startX, this.curX),
-      y: Math.min(this.startY, this.curY),
-      w: Math.abs(e.offsetX - this.startX),
-      h: Math.abs(e.offsetY - this.startY)
+      const rect = {
+        x: Math.min(this.startX, this.curX),
+        y: Math.min(this.startY, this.curY),
+        w: Math.abs(e.offsetX - this.startX),
+        h: Math.abs(e.offsetY - this.startY)
+      }
+      this.props.onSelected(rect)
     }
-    this.props.onSelected(rect)
   }
 
   render() {

@@ -7,7 +7,10 @@ const Jimp = require('jimp')
 // const {User} = require('../db/models')
 module.exports = router
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY
-
+const HEIGHT = 360
+const WIDTH = 640
+const X_SCALE = 1920 / 640
+const Y_SCALE = 1080 / 360
 // util
 
 const generateScreenshot = async (url, x, y, w, h) => {
@@ -30,7 +33,12 @@ const generateScreenshot = async (url, x, y, w, h) => {
     // instead of saving an image we'll get .. something
     const imageStr = await video
       .screenshot({
-        clip: {x: +x, y: +y, width: +w, height: +h} //must be numbers!!!!
+        clip: {
+          x: Math.round(+x * X_SCALE),
+          y: Math.round(+y * Y_SCALE),
+          width: Math.round(+w * X_SCALE),
+          height: Math.round(+h * Y_SCALE)
+        } //must be numbers!!!!
       })
       .then(buffer => buffer.toString('base64'))
     await browser.close()

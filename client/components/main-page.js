@@ -32,8 +32,7 @@ class MainPage extends Component {
   onGenerateBtnClick = () => {
     const {videoId, currentTime} = this.props
     const {x, y, w, h} = this.state;
-    const cropArray = [x,y,w,h]
-    this.props.generateOcrData(videoId, currentTime, cropArray)
+    this.props.generateOcrData(videoId, currentTime, x, y, w, h)
   }
 
   // controls drawing rectangle
@@ -91,7 +90,7 @@ class MainPage extends Component {
             )}
           </div>
         </div>
-        <div className=" column">
+        <div className="main-page-controls column">
           <h1>Current timestamp: {currentTime}</h1>
           <p>
             <textarea value={ocrText} />
