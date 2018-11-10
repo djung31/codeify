@@ -8,6 +8,8 @@ import {
 } from '../store'
 import YouTube from 'react-youtube'
 import {Rector, RectorDraw} from './index'
+import TextareaAutosize from 'react-autosize-textarea';
+
 // import ReactCrop from 'react-image-crop'
 
 class MainPage extends Component {
@@ -97,34 +99,34 @@ class MainPage extends Component {
                   />
                 )}
             </div>
-          </div>
-          <div className="main-page-controls column is-half box">
-            {isPaused && (
-              <React.Fragment>
-                <button type="button" onClick={this.onGenerateBtnClick}>
-                  Generate OCR text
-                </button>
-                <button type="button" onClick={this.toggleCrop}>
-                  Turn Cropping {isCropping ? 'Off' : 'On'}
-                </button>
-              </React.Fragment>
-            )}
-            <h1>Current timestamp: {currentTime}</h1>
-            <p>
-              x: {this.state.x}, y: {this.state.y}, w: {this.state.w}, h:{' '}
-              {this.state.h},
-            </p>
-            {image && <img src={`data:image/jpeg;base64,${image}`} />}
-          </div>
-        </div>
-        <div className="columns">
-          <div className="column is-half box">
-            <p>
-              <textarea value={ocrText} />
-            </p>
+            <div className="box">
+              {isPaused && (
+                <React.Fragment>
+                  <button type="button" onClick={this.onGenerateBtnClick}>
+                    Generate OCR text
+                  </button>
+                  <button type="button" onClick={this.toggleCrop}>
+                    Turn Cropping {isCropping ? 'Off' : 'On'}
+                  </button>
+                </React.Fragment>
+              )}
+              <h1>Current timestamp: {currentTime}</h1>
+              <p>
+                x: {this.state.x}, y: {this.state.y}, w: {this.state.w}, h:{' '}
+                {this.state.h},
+              </p>
+              {image && <img src={`data:image/jpeg;base64,${image}`} />}
+            </div>
           </div>
           <div className="column is-half box">
-            <h1>Hello world</h1>
+            <div className="box">
+              <p>
+                <TextareaAutosize value={ocrText} rows={ocrText.split('\n').length}/>
+              </p>
+            </div>
+            <div className="column is-half box">
+              <h1>Hello world</h1>
+            </div>
           </div>
         </div>
       </div>
