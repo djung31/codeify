@@ -22,10 +22,10 @@ class MainPage extends Component {
       currentPlayerState: NaN,
       // rectangle for canvas
       selected: false,
-      x: -1,
-      y: -1,
-      w: -1,
-      h: -1
+      x: 0,
+      y: 0,
+      w: 640,
+      h: 360
     }
   }
   componentWillUnmount() {
@@ -85,67 +85,100 @@ class MainPage extends Component {
     // overlay video and canvas elememnts
 
     return (
-      <div className="">
-        <div className="columns">
-          <div className="column is-half">
-            <div className="youtube-container box">
-              <YouTube
-                videoId={`${videoId}?wmode=Opaque`}
-                opts={opts}
-                onReady={this._onReady}
-                onStateChange={this._onPlayerStateChange}
-                containerClassName="youtube-video"
-              />
-              {isPaused &&
-                isCropping && (
-                  <Rector
-                    width={WIDTH}
-                    height={HEIGHT}
-                    onSelected={this.onSelected}
-                    isCropping={isCropping}
-                    curRect={curRect}
-                    className="youtube-video"
-                  />
-                )}
-            </div>
-            <div className="box">
-              {isPaused && (
-                <React.Fragment>
-                  <button type="button" onClick={this.onGenerateBtnClick}>
-                    Generate OCR text
-                  </button>
-                  <button type="button" onClick={this.toggleCrop}>
-                    Turn Cropping {isCropping ? 'Off' : 'On'}
-                  </button>
-                </React.Fragment>
-              )}
-              <h1>Current timestamp: {currentTime}</h1>
-              <p>
-                x: {this.state.x}, y: {this.state.y}, w: {this.state.w}, h:{' '}
-                {this.state.h},
-              </p>
-              {image && <img src={`data:image/jpeg;base64,${image}`} />}
+      <div>
+        <div className="container">
+          <div className="columns is-centered">
+            <div className="column is-half has-text-centered">
+              <h3>Instructions:</h3>
+              <ol>
+                <li> Play the video.
+                </li>
+                <li>
+                  When you reach some text you want to grab, pause the video
+                </li>
+                <li>
+                  If you want to crop, hit the 'turn cropping on' button.
+                </li>
+                <li>
+                  Draw the area you want to crop.
+                </li>
+                <li>
+                  Hit "generate OCR data".
+                </li>
+                <li>
+                  Wait for ... a long time.
+                </li>
+                <li>
+                  The data will show up automatically.
+                </li>
+              </ol>
             </div>
           </div>
-          <div className="column is-half box">
-            <div className="box">
+        </div>
+        <div className="section">
+          <div className="columns">
+            <div className="column is-half">
+              <div className="youtube-container box">
+                <YouTube
+                  videoId={`${videoId}?wmode=Opaque`}
+                  opts={opts}
+                  onReady={this._onReady}
+                  onStateChange={this._onPlayerStateChange}
+                  containerClassName="youtube-video"
+                />
+                {isPaused &&
+                  isCropping && (
+                    <Rector
+                      width={WIDTH}
+                      height={HEIGHT}
+                      onSelected={this.onSelected}
+                      isCropping={isCropping}
+                      curRect={curRect}
+                      className="youtube-video"
+                    />
+                  )}
+              </div>
+              <div className="box">
+                {isPaused && (
+                  <React.Fragment>
+                    <button type="button" onClick={this.onGenerateBtnClick}>
+                      Generate OCR text
+                    </button>
+                    <button type="button" onClick={this.toggleCrop}>
+                      Turn Cropping {isCropping ? 'Off' : 'On'}
+                    </button>
+                  </React.Fragment>
+                )}
+                <h1>Current timestamp: {currentTime}</h1>
+                <p>
+                  x: {this.state.x}, y: {this.state.y}, w: {this.state.w}, h:{' '}
+                  {this.state.h},
+                </p>
+                {image && <img src={`data:image/jpeg;base64,${image}`} />}
+              </div>
+            </div>
+            <div className="column is-half box">
+              <div className="box">
                 <TextareaAutosize
                   value={ocrText}
                   rows={ocrText.split('\n').length}
                 />
-              <button type="button" onClick={this.copyToClipboard} >Copy to Clipboard</button>
-            </div>
-            <div className="box">
-              <CodeMirror
-                value="console.log('hello world')"
-                options={{
-                  mode: 'xml',
-                  theme: 'material',
-                  lineNumbers: true,
-                  tabSize: 2,
-                }}
-                onChange={(editor, data, value) => {}}
-              />
+                <button type="button" onClick={this.copyToClipboard}>
+                  Copy to Clipboard
+                </button>
+              </div>
+              <div className="box">
+                <CodeMirror
+                  value="console.log('hello world')"
+                  options={{
+                    mode: 'xml',
+                    theme: 'material',
+                    lineNumbers: true,
+                    tabSize: 2
+                  }}
+                  onChange={(editor, data, value) => {}}
+                />
+              </div>
             </div>
           </div>
         </div>
