@@ -1,13 +1,28 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {clearOcrState, resetYoutube, setCurrentTime, generateOcrData} from '../store'
+import {
+  clearOcrState,
+  resetYoutube,
+  setCurrentTime,
+  generateOcrData
+} from '../store'
 import YouTube from 'react-youtube'
+import {Rector, RectorDraw} from './index'
+// import ReactCrop from 'react-image-crop'
 
 class MainPage extends Component {
   constructor() {
     super()
+    this.canvasRef = React.createRef()
     this.state = {
-      currentPlayerState: NaN
+      isCropping: false,
+      currentPlayerState: NaN,
+      // rectangle for canvas
+      selected: false,
+      x: -1,
+      y: -1,
+      w: -1,
+      h: -1
     }
   }
   componentWillUnmount() {
@@ -15,39 +30,100 @@ class MainPage extends Component {
     this.props.clearOcrState()
   }
 
-  onClick = () => {
+  onGenerateBtnClick = () => {
     const {videoId, currentTime} = this.props
-    this.props.generateOcrData(videoId, currentTime)
+    const {x, y, w, h} = this.state
+    // multiply by 3 to scale to 1080p
+    this.props.generateOcrData(videoId, currentTime, x * 2, y * 2, w * 2, h * 2)
+  }
+
+  // controls drawing rectangle
+  toggleCrop = () => {
+    const curVal = this.state.isCropping
+    this.setState({isCropping: !curVal})
+  }
+
+  onSelected = rect => {
+    this.setState({selected: true, ...rect})
+  }
+
+  getSelectionStr() {
+    if (this.state.selected) {
+      const state = this.state
+      return `x: ${state.x}, y: ${state.y}, w: ${state.w}, h: ${state.h}`
+    }
+    return 'No Selection'
   }
 
   render() {
+    const HEIGHT = 360
+    const WIDTH = 640
     const {videoId, ocrData, currentTime} = this.props
-    const {ocrText, image, visionData} = ocrData;
+    const {ocrText, image, visionData} = ocrData
     const opts = {
-      height: '360',
-      width: '640',
+      height: HEIGHT,
+      width: WIDTH,
       playerVars: {
         // https://developers.google.com/youtube/player_parameters
         autoplay: 1
       }
     }
-    const isPaused = (this.state.currentPlayerState === 2);
+    const curRect = this.state.rect
+    const isPaused = this.state.currentPlayerState === 2 // true if video paused
+    const isCropping = this.state.isCropping
+    // overlay video and canvas elememnts
 
     return (
-      <div>
-        <YouTube
-          videoId={videoId}
-          opts={opts}
-          onReady={this._onReady}
-          onStateChange={this._onPlayerStateChange}
-        />
-        <div>
+      <div className="columns">
+        <div className="column">
+          <div className="youtube-container">
+            <YouTube
+              videoId={`${videoId}?wmode=Opaque`}
+              opts={opts}
+              onReady={this._onReady}
+              onStateChange={this._onPlayerStateChange}
+              containerClassName="youtube-video"
+            />
+            {isPaused &&
+              isCropping && (
+                <Rector
+                  width={WIDTH}
+                  height={HEIGHT}
+                  onSelected={this.onSelected}
+                  isCropping={isCropping}
+                  curRect={curRect}
+                />
+              )}
+            {/* {isPaused &&
+              isCropping && (
+                <RectorDraw
+                  width={WIDTH}
+                  height={HEIGHT}
+                  curRect={curRect}
+                />
+              )} */}
+          </div>
+        </div>
+        <div className="main-page-controls column">
           <h1>Current timestamp: {currentTime}</h1>
-          <p><textarea value={ocrData.ocrText} /></p>
-          {isPaused && (<button type="button" onClick={this.onClick}>
-            Generate OCR text
-          </button>)}
-          {(image) && <img src={`data:image/jpeg;base64,${image}`} />}
+          <p>
+            <textarea value={ocrText} />
+          </p>
+          {isPaused && (
+            <React.Fragment>
+              <button type="button" onClick={this.onGenerateBtnClick}>
+                Generate OCR text
+              </button>
+              <button type="button" onClick={this.toggleCrop}>
+                Turn Cropping {isCropping ? 'Off' : 'On'}
+              </button>
+            </React.Fragment>
+          )}
+          <p>
+            x: {this.state.x}, y: {this.state.y}, w: {this.state.w}, h:{' '}
+            {this.state.h},
+          </p>
+          {image && <img src={`data:image/jpeg;base64,${image}`} />}
         </div>
       </div>
     )
@@ -80,6 +156,7 @@ const mapDispatch = dispatch => ({
   setCurrentTime: time => dispatch(setCurrentTime(time)),
   resetYoutube: () => dispatch(resetYoutube()),
   clearOcrState: () => dispatch(clearOcrState()),
-  generateOcrData: (videoId, time) => dispatch(generateOcrData(videoId, time))
+  generateOcrData: (videoId, time, x, y, w, h) =>
+    dispatch(generateOcrData(videoId, time, x, y, w, h))
 })
 export default connect(mapState, mapDispatch)(MainPage)

@@ -1,0 +1,26 @@
+.youtube-container {
+  position: relative;
+}
+
+.youtube-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2
+}
+
+.youtube-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1
+}
+
+.block {
+  display: block;
+  position: absolute
+}
+
+.main-page-controls {
+  z-index: 3
+}
