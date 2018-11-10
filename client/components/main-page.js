@@ -7,7 +7,8 @@ import {
   generateOcrData
 } from '../store'
 import YouTube from 'react-youtube'
-import {Rector} from './index'
+import {Rector, RectorDraw} from './index'
+// import ReactCrop from 'react-image-crop'
 
 class MainPage extends Component {
   constructor() {
@@ -33,7 +34,7 @@ class MainPage extends Component {
     const {videoId, currentTime} = this.props
     const {x, y, w, h} = this.state
     // multiply by 3 to scale to 1080p
-    this.props.generateOcrData(videoId, currentTime, x*3, y*3, w*3, h*3)
+    this.props.generateOcrData(videoId, currentTime, x * 3, y * 3, w * 3, h * 3)
   }
 
   // controls drawing rectangle
@@ -93,6 +94,14 @@ class MainPage extends Component {
                   curRect={curRect}
                 />
               )}
+            {/* {isPaused &&
+              isCropping && (
+                <RectorDraw
+                  width={WIDTH}
+                  height={HEIGHT}
+                  curRect={curRect}
+                />
+              )} */}
           </div>
         </div>
         <div className="main-page-controls column">

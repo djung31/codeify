@@ -1,8 +1,6 @@
 const router = require('express').Router()
 const puppeteer = require('puppeteer')
 const axios = require('axios')
-const Jimp = require('jimp')
-// const fs = require('fs')
 
 // const {User} = require('../db/models')
 module.exports = router

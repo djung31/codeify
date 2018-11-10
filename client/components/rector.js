@@ -38,8 +38,8 @@ class Rector extends React.Component {
       return
     }
 
-    this.ctx.clearRect(0, 0, this.props.width, this.props.height)
     if (this.isDrag) {
+      this.ctx.clearRect(0, 0, this.props.width, this.props.height)
       const rect = {
         x: this.startX,
         y: this.startY,
@@ -47,9 +47,10 @@ class Rector extends React.Component {
         h: this.curY - this.startY
       }
       this.ctx.strokeRect(rect.x, rect.y, rect.w, rect.h)
+    } else {
+      const curRect = this.props.curRect
+      this.ctx.strokeRect(curRect.x, curRect.y, curRect.w, curRect.h)
     }
-    const {propX, propY, propW, propH} = this.props.rect
-    if (this.props.isCropping) this.ctx.strokeRect(propX, propY, propW, propH)
     this.isDirty = false
   }
 
