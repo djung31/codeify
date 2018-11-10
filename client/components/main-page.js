@@ -34,7 +34,7 @@ class MainPage extends Component {
     const {videoId, currentTime} = this.props
     const {x, y, w, h} = this.state
     // multiply by 3 to scale to 1080p
-    this.props.generateOcrData(videoId, currentTime, x * 3, y * 3, w * 3, h * 3)
+    this.props.generateOcrData(videoId, currentTime, x * 2, y * 2, w * 2, h * 2)
   }
 
   // controls drawing rectangle
