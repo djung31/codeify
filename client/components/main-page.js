@@ -67,6 +67,7 @@ class MainPage extends Component {
         autoplay: 1
       }
     }
+    const curRect = this.state.rect
     const isPaused = this.state.currentPlayerState === 2 // true if video paused
     const isCropping = this.state.isCropping
     // overlay video and canvas elememnts
@@ -88,6 +89,8 @@ class MainPage extends Component {
                   width={WIDTH}
                   height={HEIGHT}
                   onSelected={this.onSelected}
+                  isCropping={isCropping}
+                  curRect={curRect}
                 />
               )}
           </div>

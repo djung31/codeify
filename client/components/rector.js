@@ -48,6 +48,8 @@ class Rector extends React.Component {
       }
       this.ctx.strokeRect(rect.x, rect.y, rect.w, rect.h)
     }
+    const {propX, propY, propW, propH} = this.props.rect
+    if (this.props.isCropping) this.ctx.strokeRect(propX, propY, propW, propH)
     this.isDirty = false
   }
 
