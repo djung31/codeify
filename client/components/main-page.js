@@ -7,8 +7,9 @@ import {
   generateOcrData
 } from '../store'
 import YouTube from 'react-youtube'
-import {Rector, RectorDraw} from './index'
-import TextareaAutosize from 'react-autosize-textarea';
+import {Rector} from './index'
+import TextareaAutosize from 'react-autosize-textarea'
+import {UnControlled as CodeMirror} from 'react-codemirror2'
 
 // import ReactCrop from 'react-image-crop'
 
@@ -38,7 +39,15 @@ class MainPage extends Component {
     // multiply by 3 to scale to 1080p
     this.props.generateOcrData(videoId, currentTime, x * 2, y * 2, w * 2, h * 2)
   }
-
+  copyToClipboard = () => {
+    let textField = document.createElement('textarea')
+    console.log('ocr text', this.props.ocrData.ocrText)
+    textField.innerHTML = this.props.ocrData.ocrText
+    document.body.appendChild(textField)
+    textField.select()
+    document.execCommand('copy')
+    textField.remove()
+  }
   // controls drawing rectangle
   toggleCrop = () => {
     const curVal = this.state.isCropping
@@ -120,12 +129,23 @@ class MainPage extends Component {
           </div>
           <div className="column is-half box">
             <div className="box">
-              <p>
-                <TextareaAutosize value={ocrText} rows={ocrText.split('\n').length}/>
-              </p>
+                <TextareaAutosize
+                  value={ocrText}
+                  rows={ocrText.split('\n').length}
+                />
+              <button type="button" onClick={this.copyToClipboard} >Copy to Clipboard</button>
             </div>
-            <div className="column is-half box">
-              <h1>Hello world</h1>
+            <div className="box">
+              <CodeMirror
+                value="console.log('hello world')"
+                options={{
+                  mode: 'xml',
+                  theme: 'material',
+                  lineNumbers: true,
+                  tabSize: 2,
+                }}
+                onChange={(editor, data, value) => {}}
+              />
             </div>
           </div>
         </div>
