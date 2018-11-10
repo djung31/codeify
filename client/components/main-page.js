@@ -74,56 +74,58 @@ class MainPage extends Component {
     // overlay video and canvas elememnts
 
     return (
-      <div className="columns">
-        <div className="column">
-          <div className="youtube-container">
-            <YouTube
-              videoId={`${videoId}?wmode=Opaque`}
-              opts={opts}
-              onReady={this._onReady}
-              onStateChange={this._onPlayerStateChange}
-              containerClassName="youtube-video"
-            />
-            {isPaused &&
-              isCropping && (
-                <Rector
-                  width={WIDTH}
-                  height={HEIGHT}
-                  onSelected={this.onSelected}
-                  isCropping={isCropping}
-                  curRect={curRect}
-                />
-              )}
-            {/* {isPaused &&
-              isCropping && (
-                <RectorDraw
-                  width={WIDTH}
-                  height={HEIGHT}
-                  curRect={curRect}
-                />
-              )} */}
+      <div className="">
+        <div className="columns">
+          <div className="column is-half">
+            <div className="youtube-container box">
+              <YouTube
+                videoId={`${videoId}?wmode=Opaque`}
+                opts={opts}
+                onReady={this._onReady}
+                onStateChange={this._onPlayerStateChange}
+                containerClassName="youtube-video"
+              />
+              {isPaused &&
+                isCropping && (
+                  <Rector
+                    width={WIDTH}
+                    height={HEIGHT}
+                    onSelected={this.onSelected}
+                    isCropping={isCropping}
+                    curRect={curRect}
+                    className="youtube-video"
+                  />
+                )}
+            </div>
+          </div>
+          <div className="main-page-controls column is-half box">
+            {isPaused && (
+              <React.Fragment>
+                <button type="button" onClick={this.onGenerateBtnClick}>
+                  Generate OCR text
+                </button>
+                <button type="button" onClick={this.toggleCrop}>
+                  Turn Cropping {isCropping ? 'Off' : 'On'}
+                </button>
+              </React.Fragment>
+            )}
+            <h1>Current timestamp: {currentTime}</h1>
+            <p>
+              x: {this.state.x}, y: {this.state.y}, w: {this.state.w}, h:{' '}
+              {this.state.h},
+            </p>
+            {image && <img src={`data:image/jpeg;base64,${image}`} />}
           </div>
         </div>
-        <div className="main-page-controls column">
-          <h1>Current timestamp: {currentTime}</h1>
-          <p>
-            <textarea value={ocrText} />
-          </p>
-          {isPaused && (
-            <React.Fragment>
-              <button type="button" onClick={this.onGenerateBtnClick}>
-                Generate OCR text
-              </button>
-              <button type="button" onClick={this.toggleCrop}>
-                Turn Cropping {isCropping ? 'Off' : 'On'}
-              </button>
-            </React.Fragment>
-          )}
-          <p>
-            x: {this.state.x}, y: {this.state.y}, w: {this.state.w}, h:{' '}
-            {this.state.h},
-          </p>
-          {image && <img src={`data:image/jpeg;base64,${image}`} />}
+        <div className="columns">
+          <div className="column is-half box">
+            <p>
+              <textarea value={ocrText} />
+            </p>
+          </div>
+          <div className="column is-half box">
+            <h1>Hello world</h1>
+          </div>
         </div>
       </div>
     )

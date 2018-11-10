@@ -1,5 +1,8 @@
 .youtube-container {
+  display: block;
   position: relative;
+  height: 360px;
+  width: 640px;
 }
 
 .youtube-overlay {
