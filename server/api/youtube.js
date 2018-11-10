@@ -37,12 +37,12 @@ const generateScreenshot = async (url, x, y, w, h) => {
     // instead of saving an image we'll get .. something
     const imageStr = await video
       .screenshot({
-        clip: {
-          x: +x,
-          y: +y,
-          width: +w,
-          height: +h
-        } //must be numbers!!!!
+        // clip: {
+        //   x: +x,
+        //   y: +y,
+        //   width: +w,
+        //   height: +h
+        // }
       })
       .then(buffer => buffer.toString('base64'))
     // console.log(imageStr);
