@@ -7,7 +7,8 @@ import store from './store'
 import App from './app'
 import './style.css'
 import 'bulma/css/bulma.css'
-
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/material.css';
 
 // establishes socket connection
 // import './socket'

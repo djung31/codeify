@@ -1,5 +1,7 @@
 .youtube-container {
   position: relative;
+  height: 360px;
+  width: 640px;
 }
 
 .youtube-overlay {
@@ -21,6 +23,10 @@
   position: absolute
 }
 
-.main-page-controls {
-  z-index: 3
+textarea {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	width: 100%;
 }

@@ -3,8 +3,8 @@ import React from 'react'
 
 class Rector extends React.Component {
   static defaultProps = {
-    width: 320,
-    height: 200,
+    width: 640,
+    height: 360,
     strokeStyle: '#F00',
     lineWidth: 1,
     onSelected: () => {}
@@ -111,7 +111,7 @@ class Rector extends React.Component {
         ref={c => {
           this.canvas = c
         }}
-        className="youtube-overlay"
+        className={this.props.className}
       />
     )
   }
