@@ -32,6 +32,11 @@ const setVisionData = (visionData) => ({
 
 // thunk
 export const generateOcrData = (videoId, time, x, y, w, h) => async dispatch => {
+  // console.log('params: ');
+  // console.log(`x: ${x}`)
+  // console.log(`y: ${y}`)
+  // console.log(`w: ${w}`)
+  // console.log(`h: ${h}`)
   const {data} = await axios.get(`/api/youtube?videoId=${videoId}&t=${time}&x=${x}&y=${y}&w=${w}&h=${h}`)
   const image = data.image;
   const visionData = data.data;

@@ -7,10 +7,10 @@ const Jimp = require('jimp')
 // const {User} = require('../db/models')
 module.exports = router
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY
-const HEIGHT = 360
-const WIDTH = 640
-const X_SCALE = 1920 / 640
-const Y_SCALE = 1080 / 360
+// const HEIGHT = 360
+// const WIDTH = 640
+// const X_SCALE = 1920 / 640
+// const Y_SCALE = 1080 / 360
 // util
 
 const generateScreenshot = async (url, x, y, w, h) => {
@@ -24,6 +24,12 @@ const generateScreenshot = async (url, x, y, w, h) => {
     await page.goto(url)
     console.log('webpage: ', url)
     await page.setViewport({width: 1920, height: 1080})
+    console.log('params: ');
+    console.log(`x: ${x}`)
+    console.log(`y: ${y}`)
+    console.log(`w: ${w}`)
+    console.log(`h: ${h}`)
+
     const video = await page.$('.html5-video-player')
     await page.evaluate(() => {
       // Hide youtube player controls.
@@ -34,13 +40,14 @@ const generateScreenshot = async (url, x, y, w, h) => {
     const imageStr = await video
       .screenshot({
         clip: {
-          x: Math.round(+x * X_SCALE),
-          y: Math.round(+y * Y_SCALE),
-          width: Math.round(+w * X_SCALE),
-          height: Math.round(+h * Y_SCALE)
+          x: +x,
+          y: +y,
+          width: +w,
+          height: +h
         } //must be numbers!!!!
       })
       .then(buffer => buffer.toString('base64'))
+    // console.log(imageStr);
     await browser.close()
     return imageStr
   } catch (err) {
@@ -61,13 +68,18 @@ router.get('/', async (req, res, next) => {
   const y = req.query.y
   const w = req.query.w
   const h = req.query.h
-
+  // console.log('params: ');
+  // console.log(`x: ${x}`)
+  // console.log(`y: ${y}`)
+  // console.log(`w: ${w}`)
+  // console.log(`h: ${h}`)
   const urlToScreenshot = `https://www.youtube.com/watch?v=${videoId}&t=${t}s`
   try {
     // use puppeteer to generate a screenshot of the youtube vid
     const imageStr = await generateScreenshot(urlToScreenshot, x, y, w, h)
     // console.log(imageStr);
     // res.sendStatus(200);
+    // console.log(imageStr);
     console.log('image generated...')
     // return
     // send the string to google cloud api

@@ -31,8 +31,9 @@ class MainPage extends Component {
 
   onGenerateBtnClick = () => {
     const {videoId, currentTime} = this.props
-    const {x, y, w, h} = this.state;
-    this.props.generateOcrData(videoId, currentTime, x, y, w, h)
+    const {x, y, w, h} = this.state
+    // multiply by 3 to scale to 1080p
+    this.props.generateOcrData(videoId, currentTime, x*3, y*3, w*3, h*3)
   }
 
   // controls drawing rectangle
@@ -66,7 +67,7 @@ class MainPage extends Component {
         autoplay: 1
       }
     }
-    const isPaused = (this.state.currentPlayerState === 2) // true if video paused
+    const isPaused = this.state.currentPlayerState === 2 // true if video paused
     const isCropping = this.state.isCropping
     // overlay video and canvas elememnts
 
@@ -81,13 +82,14 @@ class MainPage extends Component {
               onStateChange={this._onPlayerStateChange}
               containerClassName="youtube-video"
             />
-            {(isPaused && isCropping) && (
-              <Rector
-                width={WIDTH}
-                height={HEIGHT}
-                onSelected={this.onSelected}
-              />
-            )}
+            {isPaused &&
+              isCropping && (
+                <Rector
+                  width={WIDTH}
+                  height={HEIGHT}
+                  onSelected={this.onSelected}
+                />
+              )}
           </div>
         </div>
         <div className="main-page-controls column">
@@ -101,12 +103,13 @@ class MainPage extends Component {
                 Generate OCR text
               </button>
               <button type="button" onClick={this.toggleCrop}>
-                Turn Cropping {isCropping ? 'Off': 'On'}
+                Turn Cropping {isCropping ? 'Off' : 'On'}
               </button>
             </React.Fragment>
           )}
           <p>
-            x: {this.state.x}, y: {this.state.y}, w: {this.state.w}, h: {this.state.h},
+            x: {this.state.x}, y: {this.state.y}, w: {this.state.w}, h:{' '}
+            {this.state.h},
           </p>
           {image && <img src={`data:image/jpeg;base64,${image}`} />}
         </div>
@@ -141,6 +144,7 @@ const mapDispatch = dispatch => ({
   setCurrentTime: time => dispatch(setCurrentTime(time)),
   resetYoutube: () => dispatch(resetYoutube()),
   clearOcrState: () => dispatch(clearOcrState()),
-  generateOcrData: (videoId, time) => dispatch(generateOcrData(videoId, time))
+  generateOcrData: (videoId, time, x, y, w, h) =>
+    dispatch(generateOcrData(videoId, time, x, y, w, h))
 })
 export default connect(mapState, mapDispatch)(MainPage)
