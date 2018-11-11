@@ -5,8 +5,8 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 import user from './user'
 import youtube from './youtube'
 import ocrData from './ocrData'
-
-const reducer = combineReducers({user, youtube, ocrData})
+import gifmaker from './gifmaker'
+const reducer = combineReducers({user, youtube, ocrData, gifmaker})
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({collapsed: true}))
 )
@@ -16,3 +16,4 @@ export default store
 export * from './user'
 export * from './youtube'
 export * from './ocrData'
+export * from './gifmaker'

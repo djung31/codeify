@@ -56,9 +56,10 @@ const generateScreenshot = async url => {
 const printImageSize = async image => {
   let w, h
   try {
-    await Jimp.read(Buffer.from(image, 'base64')).then(img => {
-      w = img.bitmap.width
-      h = img.bitmap.height
+    let buffer = Buffer.from(image, 'base64')
+    await Jimp.read(buffer).then(async img => {
+      w = await img.bitmap.width
+      h = await img.bitmap.height
     })
     return `width ${w} x height ${h}`
   } catch (err) {
