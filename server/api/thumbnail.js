@@ -17,30 +17,30 @@ const generateThumbs = async url => {
   console.log('screenshotting: ', url)
   try {
     const browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-      // headless: false
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--load-extension=./../uBlock']
+      , headless: false
       // ^ use this to debug
     })
     const page = await browser.newPage()
     await page.goto(url)
     console.log('navigating to webpage: ', url)
-    await page.setViewport({width: 1920, height: 1080})
+    await page.setViewport({width: 640, height: 360})
     const video = await page.$('.html5-video-player')
-    await page.evaluate(() => {
-      // Hide youtube player controls.
-      let dom = document.querySelector('.ytp-chrome-bottom')
-      dom.style.display = 'none'
-    })
+    // await page.evaluate(() => {
+    //   // Hide youtube player controls.
+    //   let dom = document.querySelector('.ytp-chrome-bottom')
+    //   dom.style.display = 'none'
+    // })
+    await sleep(1000)
     await page.keyboard.press('Space')
     for (let i = 0; i < 10; i++) {
-      // await page.keyboard.press('Space')
+      await page.keyboard.press(i)
       await sleep(1000) // wait 1 sec to let video play
       let image = await video.screenshot() // binary
       console.log('screenshot taken...')
       outputArr.push(image.toString('base64'))
-      await page.keyboard.press(i)
     }
-    browser.close()
+    // browser.close()
     return outputArr
   } catch (err) {
     console.error(err.response)
@@ -65,6 +65,7 @@ router.get('/', async (req, res, next) => {
   // end response
 
   try {
+    // url ->
     // use puppeteer to generate a screenshot of the youtube vid
     const screenshot = await generateThumbs(urlToScreenshot)
     if (screenshot === undefined) {
