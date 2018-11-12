@@ -20,15 +20,15 @@ class GifPage extends Component {
     this.setState({showToolbarChecked: !curVal})
   }
 
-  onClick = event => {
+  onClick = async event => {
     event.preventDefault()
     const videoId = this.parseUrl(this.state.url)
-    this.props.setGifVideoId(videoId)
+    await this.props.setGifVideoId(videoId)
     this.state.showToolbarChecked
-      ? this.props.setShowToolbarTrue()
-      : this.props.setShowToolbarFalse()
-    this.props.setGifPendingTrue()
-    this.setState({url: ''})
+      ? await this.props.setShowToolbarTrue()
+      : await this.props.setShowToolbarFalse()
+    await this.props.setGifPendingTrue()
+    await this.setState({url: ''})
     this.props.history.push('/gifresult')
   }
 

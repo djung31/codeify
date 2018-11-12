@@ -20,8 +20,8 @@ const generateThumbs = async (url, showToolbar) => {
   let outputArr = []
   console.log('screenshotting: ', url)
   try {
-    const pathToExt = path.join(__dirname, '..', '..', 'uBlock')
-    console.log(pathToExt)
+    // const pathToExt = path.join(__dirname, '..', '..', 'uBlock')
+    // console.log(pathToExt)
     const browser = await puppeteer.launch({
       args: [
         '--no-sandbox',
@@ -75,8 +75,8 @@ const generateThumbsTen = async (url, showToolbar, videoId) => {
   console.log('screenshotting: ', url)
 
   try {
-    const pathToExt = path.join(__dirname, '..', '..', 'uBlock')
-    console.log(pathToExt)
+    // const pathToExt = path.join(__dirname, '..', '..', 'uBlock')
+    // console.log(pathToExt)
     const browser = await puppeteer.launch({
       args: [
         '--no-sandbox',
@@ -161,7 +161,6 @@ router.get('/interval-ten', async (req, res, next) => {
   const {videoId, showToolbar} = req.query
   const urlToScreenshot = `https://www.youtube.com/watch?v=${videoId}&t=0s`
   try {
-    // url ->
     // use puppeteer to generate a screenshot of the youtube vid
     const screenshot = await generateThumbsTen(
       urlToScreenshot,

@@ -107,6 +107,6 @@ const mapState = state => ({
 })
 const mapDispatch = dispatch => ({
   resetGifmaker: () => dispatch(resetGifmaker()),
-  generateGifTens: videoId => dispatch(generateGifTens(videoId))
+  generateGifTens: (videoId, showToolbar) => dispatch(generateGifTens(videoId, showToolbar))
 })
 export default connect(mapState, mapDispatch)(GifResultTens)

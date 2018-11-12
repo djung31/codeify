@@ -7,10 +7,10 @@ class GifResult extends Component {
     super()
     this.state = {
       showThumbs: true,
-      animatedImage: ''
     }
   }
   componentDidMount() {
+    console.log(this.props.videoId, this.props.showToolbar)
     this.props.generateGif(this.props.videoId, this.props.showToolbar)
   }
   componentWillUnmount() {
@@ -107,6 +107,6 @@ const mapState = state => ({
 })
 const mapDispatch = dispatch => ({
   resetGifmaker: () => dispatch(resetGifmaker()),
-  generateGif: videoId => dispatch(generateGif(videoId))
+  generateGif: (videoId, showToolbar) => dispatch(generateGif(videoId, showToolbar))
 })
 export default connect(mapState, mapDispatch)(GifResult)

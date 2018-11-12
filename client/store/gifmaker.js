@@ -6,7 +6,6 @@ const initialState = {
   pending: false,
   data: [],
   showToolbar: false
-  // currentTime: 0
 }
 
 // action types
@@ -47,13 +46,11 @@ export const setShowToolbarTrue = () => ({
 // thunks
 export const generateGif = (videoId, showToolbar) => async dispatch => {
   let {data} = await axios.get(`/api/thumbnail?videoId=${videoId}&showToolbar=${showToolbar}`);
-  // let {data} = await axios.get(`/api/thumbnail/interval-ten?videoId=${videoId}&showToolbar=${showToolbar}`);
   dispatch(setGifData(data));
   dispatch(setGifPendingFalse());
 }
 
 export const generateGifTens = (videoId, showToolbar) => async dispatch => {
-  // let {data} = await axios.get(`/api/thumbnail?videoId=${videoId}&showToolbar=${showToolbar}`);
   let {data} = await axios.get(`/api/thumbnail/interval-ten?videoId=${videoId}&showToolbar=${showToolbar}`);
   dispatch(setGifData(data));
   dispatch(setGifPendingFalse());
