@@ -54,7 +54,7 @@ const generateThumbs = async (url, showToolbar) => {
       console.log('screenshot taken...')
       outputArr.push(image.toString('base64'))
     }
-    // browser.close()
+    browser.close()
     return outputArr
   } catch (err) {
     console.error(err.response)
@@ -109,7 +109,7 @@ const generateThumbsTen = async (url, showToolbar, videoId) => {
       console.log('screenshot taken...')
       outputArr.push(image.toString('base64'))
     }
-    // browser.close()
+    browser.close()
     return outputArr
   } catch (err) {
     console.error(err.response)
