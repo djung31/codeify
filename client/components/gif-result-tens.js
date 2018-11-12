@@ -11,7 +11,7 @@ class GifResultTens extends Component {
     }
   }
   componentDidMount() {
-    this.props.generateGifTens(this.props.videoId)
+    this.props.generateGifTens(this.props.videoId, this.props.showToolbar)
   }
   componentWillUnmount() {
     this.props.resetGifMaker()
