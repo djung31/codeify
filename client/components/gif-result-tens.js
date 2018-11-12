@@ -1,17 +1,17 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {resetGifmaker, generateGif} from '../store'
+import {resetGifmaker, generateGifTens} from '../store'
 import gifshot from 'gifshot'
-class GifResult extends Component {
+
+class GifResultTens extends Component {
   constructor() {
     super()
     this.state = {
-      showThumbs: true,
-      animatedImage: ''
+      showThumbs: true
     }
   }
   componentDidMount() {
-    this.props.generateGif(this.props.videoId)
+    this.props.generateGifTens(this.props.videoId)
   }
   componentWillUnmount() {
     this.props.resetGifMaker()
@@ -107,6 +107,6 @@ const mapState = state => ({
 })
 const mapDispatch = dispatch => ({
   resetGifmaker: () => dispatch(resetGifmaker()),
-  generateGif: videoId => dispatch(generateGif(videoId))
+  generateGifTens: videoId => dispatch(generateGifTens(videoId))
 })
-export default connect(mapState, mapDispatch)(GifResult)
+export default connect(mapState, mapDispatch)(GifResultTens)

@@ -1,23 +1,49 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {setGifVideoId, setGifPendingTrue} from '../store'
+import {
+  setGifVideoId,
+  setGifPendingTrue,
+  setShowToolbarTrue,
+  setShowToolbarFalse
+} from '../store'
 
 class GifPage extends Component {
   state = {
-    url: ''
+    url: '',
+    showToolbarChecked: false
   }
   onChange = event => {
     this.setState({url: event.target.value})
+  }
+  handleCheck = () => {
+    const curVal = this.state.showToolbarChecked
+    this.setState({showToolbarChecked: !curVal})
   }
 
   onClick = event => {
     event.preventDefault()
     const videoId = this.parseUrl(this.state.url)
     this.props.setGifVideoId(videoId)
+    this.state.showToolbarChecked
+      ? this.props.setShowToolbarTrue()
+      : this.props.setShowToolbarFalse()
     this.props.setGifPendingTrue()
     this.setState({url: ''})
     this.props.history.push('/gifresult')
   }
+
+  onClickTens = event => {
+    event.preventDefault()
+    const videoId = this.parseUrl(this.state.url)
+    this.props.setGifVideoId(videoId)
+    this.state.showToolbarChecked
+      ? this.props.setShowToolbarTrue()
+      : this.props.setShowToolbarFalse()
+    this.props.setGifPendingTrue()
+    this.setState({url: ''})
+    this.props.history.push('/gifresulttens')
+  }
+
 
   // got this from the internet..
   parseUrl(url) {
@@ -41,19 +67,33 @@ class GifPage extends Component {
           <h3 className="subtitle">scrape thumbnails</h3>
           <p>Instructions:</p>
           <ul>
-            <li>Enter a Youtube video URL into the field below and click submit</li>
-            <li>example url: https://www.youtube.com/watch?v=ed8SzALpx1Q</li>
+            <li>
+              Enter a Youtube video URL into the field below and click submit
+            </li>
+            <li>example url: https://www.youtube.com/watch?v=dQw4w9WgXcQ</li>
           </ul>
-          <input
-            type="text"
-            onChange={this.onChange}
-            value={this.state.url}
-            placeholder="Copy a YouTube link here"
-          />
-          <button type="button" onClick={this.onClick}>
-            Submit
-          </button>
-
+          <form>
+            <input
+              type="text"
+              onChange={this.onChange}
+              value={this.state.url}
+              placeholder="Copy a YouTube link here"
+            />
+            <button type="button" onClick={this.onClick}>
+              Submit
+            </button>
+            <button type="button" onClick={this.onClickTens}>
+              Make long gif
+            </button>
+          </form>
+          <label>
+            <input
+              type="checkbox"
+              onChange={this.handleCheck}
+              checked={this.state.showToolbarChecked}
+            />
+            Show Youtube Controls
+          </label>
         </div>
       </div>
     )
@@ -62,7 +102,9 @@ class GifPage extends Component {
 
 const mapDispatch = dispatch => ({
   setGifVideoId: videoId => dispatch(setGifVideoId(videoId)),
-  setGifPendingTrue: () => dispatch(setGifPendingTrue())
+  setGifPendingTrue: () => dispatch(setGifPendingTrue()),
+  setShowToolbarTrue: () => dispatch(setShowToolbarTrue()),
+  setShowToolbarFalse: () => dispatch(setShowToolbarFalse())
 })
 
 export default connect(null, mapDispatch)(GifPage)
