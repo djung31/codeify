@@ -26,10 +26,10 @@ const generateThumbs = async (url, showToolbar) => {
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
-        `--disable-extensions-except=${pathToExt}`,
-        `--load-extension=${pathToExt}`
+        // `--disable-extensions-except=${pathToExt}`,
+        // `--load-extension=${pathToExt}`
       ],
-      headless: false
+      // headless: false
       // ^ use this to debug
       // required for extensions
     })
@@ -81,10 +81,10 @@ const generateThumbsTen = async (url, showToolbar, videoId) => {
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
-        `--disable-extensions-except=${pathToExt}`,
-        `--load-extension=${pathToExt}`
+        // `--disable-extensions-except=${pathToExt}`,
+        // `--load-extension=${pathToExt}`
       ],
-      headless: false
+      // headless: false
       // ^ use this to debug
       // required for extensions
     })
